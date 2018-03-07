@@ -197,7 +197,7 @@ class OsController extends Controller
         $observacao  = $request->input( 'observacao' );
         $codigo      = $this->proxRegistro();
 
-        $sql = "insert into abertura_chamado 
+        $sql = "insert into dbamv.solicitacao_os
                  (cd_os, dt_pedido, ds_servico, ds_observacao, nm_solicitante,TP_SITUACAO, CD_SETOR,
                   CD_MULTI_EMPRESA, CD_TIPO_OS, NM_USUARIO, DT_ULTIMA_ATUALIZACAO,
                   SN_SOL_EXTERNA, CD_OFICINA, SN_ORDEM_SERVICO_PRINCIPAL, 
@@ -235,8 +235,10 @@ class OsController extends Controller
         $sql = "SELECT SEQ_OS.NEXTVAL CODIGO FROM DUAL";
 
         $codigo = DB::select( $sql );
-
-        return $codigo;
+        /*( $codigo[0]->codigo );
+        die();
+        */
+        return $codigo[0]->codigo;
     }
 
 }
