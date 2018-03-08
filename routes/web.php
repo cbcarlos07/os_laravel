@@ -25,6 +25,13 @@ Route::group(['as' => 'os.','prefix' => '/',], function (){
 
 });
 
+
+Route::group(['as' => 'item.','prefix' => '/',], function (){
+    Route::post('salvar',['as' => 'salvar', 'uses' => 'ItemSolicitacaoServicoController@salvarItemOS']);
+
+
+});
+
 Route::group(['as' => 'ordem.', 'prefix' => 'os'], function (){
     Route::post('os',['as' => 'getOs', 'uses' => 'OsController@getOs']);
     Route::post('solicitada',['as' => 'solicitada', 'uses' => 'OsController@getOsSolicitadas']);

@@ -84,6 +84,58 @@
 
 
 
+    <!-- Modal informações adicionais -->
+    <div id="addInf" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="linear-progress-material small load-modal">
+                    <div class="bar bar1"></div>
+                    <div class="bar bar2"></div>
+                </div>
+                <p class="alerta-modal"></p>
+                <div class="modal-header">
+
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Informa&ccedil;&otilde;es Adicionais</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <!-- 222 = No produção
+                        -->
+                        <div class="form-group ">
+                            <input type="hidden" id="tempoHora">
+                            <input type="hidden" id="tempoMinuto">
+                            <input type="hidden" id="codigoItem">
+                            <input type="hidden" id="resp" value="{{ Session::get('funcionario') }}">
+                            <input type="hidden" id="servico" value="222">
+                            <input type="hidden" id="datai">
+                            <input type="hidden" id="dataf">
+                            <input type="hidden" id="total">
+                            <input type="hidden" id="codOs">
+                        </div>
+
+                        <div class="form-group col-lg-12">
+                            <label for="desc">Descreva as informa&ccedil;&otilde;es que queira adicionar</label>
+                            <textarea id="desc" class="form-control"></textarea>
+                        </div>
+
+                        <div class="row "></div>
+
+
+                    </div>
+                </div>
+                <div class="row"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-add-inf">Salvar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 
 
     <div class="col-md-8 " style="background: #ffffff">
@@ -502,5 +554,189 @@
 
         }
 
+        $('.lnk-add-inf').on('click', function () {
+
+            $('#addInf').modal('show');
+
+            carregarDataHoraAtualServico();
+
+        });
+
+        function carregarDataHoraAtualServico() {
+            var agora = new Date();
+            var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+            var campoData = agora.toLocaleDateString("pt-BR", options)+' '+agora.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+            var dataHoraInicial = campoData.split(' ');
+            var dataInicioStr   =  dataHoraInicial[0].split('/');
+            var diaI = dataInicioStr[0];
+            var mesI = dataInicioStr[1];
+            var anoI = dataInicioStr[2];
+            var horaInicialStr  = dataHoraInicial[1].split(':');
+            var horaI = horaInicialStr[0];
+            var minI  = horaInicialStr[1];
+            var minII = parseInt(minI)  + 1;
+            // console.log("Minuto: "+minII);
+            var dataFinal = new Date(anoI, mesI-1, diaI, horaI, minII);
+            var campoDataF = dataFinal.toLocaleDateString("pt-BR", options)+' '+dataFinal.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            // console.log('Campo data: '+campoData);
+            $('#datai').val(campoData);
+            $('#dataf').val( campoDataF );
+            //  $('#dataf').val( '' );
+
+            calcularHoras();
+        }
+
+
+        function mensagemSucessoModal() {
+            var mensagem = $('.alerta-modal');
+            mensagem.empty().html('<p class="alert alert-success">Opera&ccedil;&atilde;o realizada com sucesso</p>').fadeIn("fast");
+            setTimeout(function (){
+                $('#addInf').modal('hide');
+            },2000);
+        }
+
+        function calcularHoras () {
+
+            try{
+                var tempo = 0;
+                var data1 = $('#datai').val().trim();
+                //console.log("Data1; "+data1);
+                var data2 = $('#dataf').val().trim();
+
+                //console.log("Data inicio: '"+data1+"' Data fim: '"+data2+"'.");
+                /** Transformando data hora inicial **/
+                var dataHoraInicial = data1.split(' ');
+                var dataInicioStr   =  dataHoraInicial[0].split('/');
+                var diaI = dataInicioStr[0];
+                //console.log("Dia inicial: "+diaI);
+                var mesI = dataInicioStr[1];
+                var anoI = dataInicioStr[2];
+                var horaInicialStr  = dataHoraInicial[1].split(':');
+                var horaI = horaInicialStr[0];
+                var minI  = horaInicialStr[1];
+                var dataInicial = new Date(anoI, mesI, diaI, horaI, minI);
+
+                /** Transformando data hora final **/
+                var dataHoraFinal = data2.split(' ');
+                var dataFinalStr   =  dataHoraFinal[0].split('/');
+                var diaf = dataFinalStr[0];
+                var mesf = dataFinalStr[1];
+                var anof = dataFinalStr[2];
+                var horaFinalStr  = dataHoraFinal[1].split(':');
+                var horaf = horaFinalStr[0];
+                var minf  = horaFinalStr[1];
+                var dataFinal = new Date(anof, mesf, diaf, horaf, minf);
+
+                var diffMilissegundos  = dataFinal - dataInicial;
+                tempo +=  diffMilissegundos;
+
+                var diffSegundos = tempo / 1000;
+                var diffMinutos = diffSegundos / 60;
+                var diffHoras = Math.floor(diffMinutos / 60);
+                var minutos = diffMinutos % 60;
+
+                var horaStr = diffHoras;
+                if( diffHoras < 10 ){
+                    horaStr =  "0"+diffHoras;
+                }
+
+                var minStr = minutos;
+                if( minutos < 10 ){
+                    minStr = "0"+minutos;
+                }
+
+                var horas  = horaStr +":"+minStr;
+                $( '#tempoHora ').val( horaStr );
+                $( '#tempoMinuto' ).val( minStr );
+                $( '#total' ).val( horas );
+            }catch (err){
+                //   console.log("Erro: "+err.message);
+            }
+
+
+        }
+
+
+        $('.btn-add-inf').on('click', function () {
+            salvarItem();
+        });
+        function aguardandoProcessamento() {
+            $('.load-modal').fadeIn();
+        }
+
+        function salvarItem() {
+            var codigoItem   =  $('#codigoItem').val();
+            var horaFinal    =  $('#dataf').val();
+            var horaInicio   =  $('#datai').val();
+            var responsavel  =  $('#resp').val();
+            var tempoHora    =  $('#tempoHora').val();
+            var tempoMinuto  =  $('#tempoMinuto').val();
+            var cdOs         =  $('#codOs').val();
+            var servico      =  $('#servico').val();
+            var descricao    =  $('#desc').val();
+            var snfeito;//      =  document.getElementById('snfeito');
+            //var snvisualiza      =  $('#snvisualiza');
+            var feito        = "S";
+            var acao         = "S";
+            var url          = "{{ route('item.salvar') }}"
+            //var checado = "Sn Visualiza nao chegado";
+            /*if( snvisualiza.is(':checked') ){
+                descricao = "#HIDE#"+descricao;
+                checado = "Sn Visualiza chegado";
+            }*/
+            // console.log( checado );
+            //   console.log("Data Final: "+horaFinal);
+            /*if( snfeito.checked ){
+             feito = "S"
+             }*/
+
+
+
+            if( codigoItem > 0 ){
+                acao = "U";
+            }
+
+
+            //  console.log("Feito: "+feito);
+            //  console.log("Codigo do funcionario: "+responsavel);
+
+            $.ajax({
+                url  : url,
+                type : 'post',
+                dataType : 'json',
+                beforeSend : aguardandoProcessamento,
+                data : {
+                    _token      : '{{ csrf_token() }}',
+                    horaFinal   : horaFinal,
+                    horaInicio  : horaInicio,
+                    tempoHora   : tempoHora,
+                    cdOs        : cdOs,
+                    funcionario : responsavel,
+                    servico     : servico,
+                    descricao   : descricao,
+                    tempoMinuto : tempoMinuto,
+                    feito       : feito,
+                    codigo      : codigoItem,
+                    acao        : acao
+                },
+                success : function (data) {
+                    var retorno = data.retorno;
+                    if( retorno > 0 ){
+                        $('.load-modal').fadeOut('slow');
+                        mensagemSucessoModal();
+                        ver( cdOs );
+                        $('#codigoItem').val( retorno )
+
+                    }else{
+                        $('.load-modal').fadeOut('slow');
+                        msgErroModal('Ocorreu um erro ao realizar opera&ccedil;&atilde;o');
+                    }
+                }
+            })
+
+
+
+        }
     </script>
 @stop

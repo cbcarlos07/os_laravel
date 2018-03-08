@@ -226,8 +226,12 @@ class OsController extends Controller
 
         DB::insert( $sql, $campos );
 
+        return redirect()->route('os.solicitar');
+
 
     }
+
+
 
     private function proxRegistro(){
         $codigo = 0;
