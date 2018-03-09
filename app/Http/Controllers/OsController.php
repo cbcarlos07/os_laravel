@@ -245,4 +245,40 @@ class OsController extends Controller
         return $codigo[0]->codigo;
     }
 
+    public function telaRecebimentos(){
+        return view('page.recebimento');
+    }
+
+    public function getChamadosAguardando(){
+
+        $query = "SELECT * FROM DBAMV.VIEW_HAM_LISTA_OS_OPEN";
+
+        $obj = DB::select( $query );
+
+        return response()->json( $obj);
+
+    }
+
+    public function getTotalChamadosAguardando(){
+        $query = "SELECT COUNT(*) TOTAL FROM DBAMV.VIEW_HAM_LISTA_OS_OPEN";
+        $obj = DB::select( $query );
+        return response()->json( $obj[0]->total );
+    }
+
+    public function getTotalMeusChamados( Request $request ){
+        $usuario = $request->input( 'responsavel' );
+        $query = "SELECT COUNT(*) TOTAL FROM DBAMV.V_CHAMADOS_CONSULTA V WHERE V.CD_RESPONSAVEL = ?";
+        $obj = DB::select( $query, [ $usuario ] );
+        return response()->json( $obj[0]->total );
+    }
+
+    public function telaCadastro( Request $request ){
+        $id = $request->input( 'cdos' );
+        $query = "SELECT * FROM VIEW_HAM_GETSOLICITACAO V WHERE V.CODIGO = :codigo";
+        $obj = DB::select( $query, [ 'codigo' => $id ] );
+        dd( $obj );
+        return view( 'page.chamados' )->with( $obj );
+
+    }
+
 }

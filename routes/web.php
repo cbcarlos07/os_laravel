@@ -21,6 +21,11 @@ Route::post('/logar',['as' => 'logar', 'uses' => 'UserController@logar']);
 
 Route::group(['as' => 'os.','prefix' => '/',], function (){
     Route::get('solicitar',['as' => 'solicitar', 'uses' => 'OsController@telaSolicitar']);
+    Route::get('recebimento',['as' => 'recebimento', 'uses' => 'OsController@telaRecebimentos']);
+    Route::get('recebimentos',['as' => 'recebimentos', 'uses' => 'OsController@getChamadosAguardando']);
+    Route::get('totalAguardando',['as' => 'totalAguardando', 'uses' => 'OsController@getTotalChamadosAguardando']);
+    Route::post('getTotalMeusChamados',['as' => 'getTotalMeusChamados', 'uses' => 'OsController@getTotalMeusChamados']);
+    Route::post('chamados',['as' => 'telaCadastro', 'uses' => 'OsController@telaCadastro']);
 
 
 });

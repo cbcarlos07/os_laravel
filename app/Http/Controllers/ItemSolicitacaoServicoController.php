@@ -21,7 +21,7 @@ class ItemSolicitacaoServicoController extends Controller
 
 
         if( isset( $horaFinal ) ){
-            echo "Possui hora final";
+          //  echo "Possui hora final";
             $query = "insert into DBAMV.ITSOLICITACAO_OS 
                  (CD_ITSOLICITACAO_OS,HR_FINAL, HR_INICIO,  VL_TEMPO_GASTO, CD_OS,
                  CD_FUNC, CD_SERVICO, DS_SERVICO, VL_TEMPO_GASTO_MIN, SN_CHECK_LIST,
@@ -44,7 +44,7 @@ class ItemSolicitacaoServicoController extends Controller
 
             );
         }else{
-            echo "Nao possui hora final";
+           // echo "Nao possui hora final";
             $query = "INSERT INTO DBAMV.ITSOLICITACAO_OS 
                  (CD_ITSOLICITACAO_OS,HR_FINAL, HR_INICIO,  VL_TEMPO_GASTO, CD_OS,
                  CD_FUNC, CD_SERVICO, DS_SERVICO, VL_TEMPO_GASTO_MIN, SN_CHECK_LIST,

@@ -236,6 +236,8 @@
   </div>
 @stop
 @section('js')
+    @include('js')
+
     <script>
 
 
@@ -245,7 +247,9 @@
                 carregarComboSetor();
                 carregarTabela( usuario );
                 carregarTemplates();
-                buscarLastSolicitante( usuario )
+                buscarLastSolicitante( usuario );
+                loadTotal();
+
         } );
 
         function carregarComboSolicitante() {
@@ -460,7 +464,7 @@
                     _token : '{{ csrf_token() }}'
                 },
                 success : function (data) {
-                    //console.log( data );
+                    console.log( data );
                     $.each( data, function (i, j) {
                         tabela_templates.append(
                             "<tr class='line-template'>" +
@@ -468,7 +472,7 @@
                             //"<td class='td-remove'> <a href='#excluir'  title='Salvar exemplo' onclick='removerExemplo( " + j.codigo + ", \""+ j.titulo +"\" ) '><i class='fa fa-times'></i></a></td>"+
                             "</tr>"
                         );
-                    } )
+                    } );
 
                     tabela_templates.fadeIn( 'slow' );
 
@@ -597,7 +601,6 @@
         }
 
         function calcularHoras () {
-
             try{
                 var tempo = 0;
                 var data1 = $('#datai').val().trim();
@@ -664,6 +667,18 @@
         function aguardandoProcessamento() {
             $('.load-modal').fadeIn();
         }
+
+        function loadTotal(  ) {
+            var usuario = $('#usuario').val();
+            var funcion = $('#funcionario').val();
+            loadTotalMenu( usuario, funcion );
+
+            setTimeout( function(){
+                loadTotal();
+            },30000 );
+
+        }
+
 
         function salvarItem() {
             var codigoItem   =  $('#codigoItem').val();

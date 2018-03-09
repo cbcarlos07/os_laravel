@@ -25,4 +25,6 @@ class SetorController extends Controller
 
         return response()->json( $setor[0] );
     }
+
+
 }

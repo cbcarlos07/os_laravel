@@ -93,7 +93,7 @@ function carregarTotalMeusChamados( usuario ) {
     total.text('');
 
     $.ajax({
-        url  : 'funcao/os.php',
+        url  : '{{ route('os.totalAguardando') }}',
         type : 'post',
         dataType: 'json',
         data : {

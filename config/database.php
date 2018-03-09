@@ -80,7 +80,7 @@ return [
 
 
 
-        'oracle' => [
+        'oracle1' => [
             'driver'         => 'oracle',
             'tns'            => env('DB_TNS', ''),
             'host'           => env('DB_HOST', ''),

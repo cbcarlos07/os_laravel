@@ -28,7 +28,7 @@
                 </li>
 
                 <li class="rec">
-                    <a href="recebimentos.php">
+                    <a href="{{ route('os.recebimento') }}">
                         <i class="glyphicon glyphicon-pencil"></i>Recebimentos
                         <span class="num total-recebimentos" >
 
